@@ -14,4 +14,4 @@ async def transfer(
     payment_service: PaymentService = Depends(get_payment_service),
     session=Depends(get_async_session)
 ):
-    return await payment_service.tranfer(transfer_data=transfer_data, session=session)
+    return await payment_service.transfer(transfer_data=transfer_data, session=session)

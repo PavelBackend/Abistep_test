@@ -1,22 +1,23 @@
 from fastapi import HTTPException
 from api.internal.models.users import UserCreateRequest, UserModel, UsersResponse
 from api.internal.repository.users import UsersRepo
-from api.internal.services.payment import PaymentService
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class UsersService:
     def __init__(
         self,
-        payment_service: PaymentService,
+        payment_service: "PaymentService",
         users_repo: UsersRepo
     ):
         self.payment_service = payment_service
         self.users_repo = users_repo
 
     @classmethod
-    async def get_service(cls) -> "UsersService":
-        payment_service = await PaymentService.get_service()
+    async def get_service(cls, payment_service = None) -> "UsersService":
+        if payment_service:
+            from api.internal.services.payment import PaymentService
+            payment_service = await PaymentService.get_service()
         return cls(payment_service=payment_service, users_repo=UsersRepo())
     
     async def get_user_by_id(self, user_id: int, session: AsyncSession):

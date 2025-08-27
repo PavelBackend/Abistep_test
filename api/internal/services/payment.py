@@ -1,24 +1,24 @@
 from decimal import Decimal
 from fastapi import HTTPException
 from api.internal.models.payment import TransferRequest, TransferResponse
-from api.internal.models.users import BaseResponse
 from api.internal.repository.payment import PaymentRepo
-from api.internal.services.users import UsersService
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class PaymentService:
     def __init__(
         self,
-        users_service: UsersService,
+        users_service: "UsersService",
         payment_repo: PaymentRepo
     ):
         self.users_service = users_service
         self.payment_repo = payment_repo
 
     @classmethod
-    async def get_service(cls):
-        users_service = await UsersService.get_service()
+    async def get_service(cls, users_service = None):
+        if not users_service:
+            from api.internal.services.users import UsersService
+            users_service = await UsersService.get_service()
         return cls(users_service=users_service, payment_repo=PaymentRepo())
     
     async def check_enough_money(self, amount: Decimal, sender_balance: Decimal):
@@ -26,7 +26,7 @@ class PaymentService:
     
     async def transfer(self, transfer_data: TransferRequest, session: AsyncSession) -> TransferResponse:
         if transfer_data.from_user_id == transfer_data.to_user_id:
-            raise HTTPException(400, "Нельзя перевести деньги себе!")
+            raise HTTPException(422, "Нельзя перевести деньги себе!")
 
         sender = await self.users_service.users_repo.get_user_by_id(
             user_id=transfer_data.from_user_id, session=session

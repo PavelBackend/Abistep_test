@@ -14,6 +14,5 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = Path(__file__).resolve().parent.parent / ".env"
-        print(f"Путь до енвов: {env_file}", flush=True)
 
 settings = Settings()
