@@ -27,6 +27,8 @@ class PaymentService:
     async def transfer(self, transfer_data: TransferRequest, session: AsyncSession) -> TransferResponse:
         if transfer_data.from_user_id == transfer_data.to_user_id:
             raise HTTPException(422, "Нельзя перевести деньги себе!")
+        if transfer_data.amount <= 0:
+            raise HTTPException(422, "Перевод возможен только для положительной суммы")
 
         sender = await self.users_service.users_repo.get_user_by_id(
             user_id=transfer_data.from_user_id, session=session

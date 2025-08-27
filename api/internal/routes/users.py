@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from api.database import get_async_session
 from api.depends import get_users_service
 from api.internal.models.users import UserCreateRequest, UsersResponse, UserModel
