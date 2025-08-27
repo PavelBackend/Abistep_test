@@ -14,7 +14,7 @@ class Users(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
-    balance: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    balance: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False, default=0)
 
     sent_transactions: Mapped[list["Transaction"]] = relationship(
         "Transaction",
