@@ -24,10 +24,10 @@ class UsersService:
         return await self.users_repo.get_user_by_id(user_id=user_id, session=session)
     
     async def create_user(self, user_model: UserCreateRequest, session: AsyncSession) -> UserModel:
-        try:
-            if await self.users_repo.email_exists(email=user_model.email, session=session):
+        if await self.users_repo.email_exists(email=user_model.email, session=session):
                 raise HTTPException(400, "Данный email уже используется!")
-
+        
+        try:
             new_user = await self.users_repo.create_user(user_model=user_model, session=session)
             await session.commit()
             await session.refresh(new_user)
