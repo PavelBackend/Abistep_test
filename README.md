@@ -15,7 +15,7 @@ cd Abistep_test
 docker compose -f ./deploy/docker-compose.yml --env-file .env up --build -d
 
 # Применяем миграции
-docker compose -f ./deploy/docker-compose.yml exec app alembic -c api/alembic.ini upgrade head
+docker compose -f ./deploy/docker-compose.yml exec main_service alembic -c api/alembic.ini upgrade head
 
 http://localhost:8000/docs будет доступна документация
 
